@@ -9,6 +9,9 @@ sys.setrecursionlimit(10000)
 
 class Interpreter(object):
 
+    def __init__(self):
+        self.memoryStack = MemoryStack()
+
     def add(r1, r2):
         return r1 + r2
 
@@ -75,6 +78,14 @@ class Interpreter(object):
     op['<<'] = shl
     op['>>'] = shr
 
+    def float(node):
+        return float(node.val)
+
+    def integer(node):
+        return int(node.val)
+
+    def string(node):
+        pass
 
     @on('node')
     def visit(self, node):
@@ -88,7 +99,19 @@ class Interpreter(object):
 
 	@when(AST.Const)
 	def visit(self, node):
-        return node.val
+        if re.match(r"(\+|-){0,1}(\d+\.\d+|\.\d+)", node.val):
+            return self.float(node)
+        elif re.match(r"(\+|-){0,1}\d+", node.val):
+            return self.integer(node)
+        elif re.match(r"\A('.*'|\".*\")\Z", node.val):
+            return self.string(node)
+        else:
+            variable = self.scope.get(node.val)
+            if variable is None:
+                print "Variable {} in line {} hasn't been declared".format(node.val, node.line)
+            else:
+                return variable.type
+
 
 	@when(AST.Declarations)
 	def visit(self, node):
@@ -119,11 +142,15 @@ class Interpreter(object):
 
 	@when(AST.Init)
 	def visit(self, node):
-        return node.expr.accept(self)
+        expr = node.expr.accept(self)
+        self.memoryStack.put(node.id, expr)
+        return expr
 
 	@when(AST.AssignmentInstr)
 	def visit(self, node):
-        return node.expr.accept(self)
+        expr = node.expr.accept(self)
+        self.memoryStack.set(node.id, expr)
+        return expr
 
 	@when(AST.ChoiceInstr)
 	def visit(self, node):
@@ -174,8 +201,16 @@ class Interpreter(object):
 
 	@when(AST.CastFunction)
 	def visit(self, node):
-        node.functionName.accept(self)
-        node.args.accept(self)
+        fun = self.memoryStack.get(node.functionName)
+        funM = Memory(node.functionName)
+
+        self.memoryStack.push(funM)
+        try:
+            node.args.accept(self)
+        except ReturnValueException as e:
+            return e.expr.accept(self)
+        finally:
+            self.memoryStack.pop()
 
 	@when(AST.ExprInBrackets)
 	def visit(self, node):
@@ -193,6 +228,7 @@ class Interpreter(object):
 
 	@when(AST.Function)
 	def visit(self, node):
+        self.memoryStack.insert(node.id, node)
         node.args_list_or_empty.accpet(self)
         node.compound_instr.accpet(self)
         node.line.accpet(self)
@@ -204,13 +240,15 @@ class Interpreter(object):
 
 	@when(AST.Argument)
 	def visit(self, node):
-        pass
+        self.memoryStack.insert(node.id, node)
 
 	@when(AST.Block)
 	def visit(self, node):
-        node.declarations.accpet(self)
-        node.fundefs_opt.accpet(self)
-        node.instructions_opt.accpet(self)
+        self.memoryStack.push('block')
+        node.declarations.accept(self)
+        node.fundefs_opt.accept(self)
+        node.instructions_opt.accept(self)
+        self.memoryStack.pop()
 
 	@when(AST.Blocks)
 	def visit(self, node):
