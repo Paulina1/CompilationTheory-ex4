@@ -85,7 +85,7 @@ class Interpreter(object):
         return int(node.val)
 
     def string(node):
-        pass
+        return node.val
 
     @on('node')
     def visit(self, node):
@@ -106,11 +106,7 @@ class Interpreter(object):
         elif re.match(r"\A('.*'|\".*\")\Z", node.val):
             return self.string(node)
         else:
-            variable = self.scope.get(node.val)
-            if variable is None:
-                print "Variable {} in line {} hasn't been declared".format(node.val, node.line)
-            else:
-                return variable.type
+            return self.memoryStack.get(node.id)
 
 
 	@when(AST.Declarations)
@@ -229,9 +225,9 @@ class Interpreter(object):
 	@when(AST.Function)
 	def visit(self, node):
         self.memoryStack.insert(node.id, node)
-        node.args_list_or_empty.accpet(self)
-        node.compound_instr.accpet(self)
-        node.line.accpet(self)
+        # node.args_list_or_empty.accpet(self)
+        # node.compound_instr.accpet(self)
+        # node.line.accpet(self)
 
 	@when(AST.Arguments)
 	def visit(self, node):
