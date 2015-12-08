@@ -26,6 +26,7 @@
 import sys
 import ply.yacc as yacc
 from Cparser import Cparser
+from TreePrinter import TreePrinter
 from TypeChecker import TypeChecker
 from Interpreter import Interpreter
 
