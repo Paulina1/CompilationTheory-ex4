@@ -107,7 +107,9 @@ class Interpreter(object):
         elif re.match(r"\A('.*'|\".*\")\Z", node.val):
             return self.string(node)
         else:
-            return self.memoryStack.get(node.val)
+            print node
+            from_stack = self.memoryStack.get(node.val)
+            return from_stack.val if from_stack is not None else None #TODO cos tu zle `self.memoryStack.get(node.val)` daje None
 
 
     @when(AST.Declarations)
@@ -117,7 +119,7 @@ class Interpreter(object):
 
     @when(AST.Declaration)
     def visit(self, node):
-        r1 = node.inits.accept(self)
+        return node.inits.accept(self)
 
     @when(AST.Instructions)
     def visit(self, node):
@@ -130,7 +132,7 @@ class Interpreter(object):
 
     @when(AST.PrintInstr)
     def visit(self, node):
-        return node.expr.accept(self)
+        print node.expr.accept(self)
 
     @when(AST.Inits)
     def visit(self, node):
