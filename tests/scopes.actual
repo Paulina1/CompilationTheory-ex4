@@ -1,0 +1,35 @@
+DECL
+| =
+| | d
+| | 0
+=
+| d
+| 1
+PRINT
+| d
+DECL
+| =
+| | d
+| | 0
+=
+| d
+| 2
+PRINT
+| d
+DECL
+| =
+| | d
+| | 0
+=
+| d
+| 3
+PRINT
+| d
+PRINT
+| d
+PRINT
+| d
+
+Variable d in line 7 has been declared earlier
+Variable d in line 11 has been declared earlier
+Interpretation finished

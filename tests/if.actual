@@ -1,0 +1,24 @@
+IF
+| ==
+| | 1
+| | 1
+| PRINT
+| | "OK"
+ELSE
+| PRINT
+| | "problem"
+IF
+| ==
+| | 1
+| | 0
+| PRINT
+| | "problem"
+ELSE
+| PRINT
+| | "OK"
+IF
+| 1
+| PRINT
+| | "OK"
+
+Interpretation finished

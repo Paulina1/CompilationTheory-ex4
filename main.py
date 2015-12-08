@@ -51,6 +51,7 @@ if __name__ == '__main__':
     # to nazwa tej ostatniej dla Interpretera powinna zostac zmieniona, np. na accept2 ( ast.accept2(Interpreter()) )
     # tak aby rozne funkcje accept z roznych implementacji wizytorow nie kolidowaly ze soba
     ast.accept(Interpreter())
+    print "Interpretation finished"
 
     # in future
     # ast.accept(OptimizationPass1())

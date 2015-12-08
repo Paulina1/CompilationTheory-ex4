@@ -1,0 +1,57 @@
+IF
+| ==
+| | 1
+| | 0
+| PRINT
+| | "problem"
+ELSE
+| IF
+| | ==
+| | | 1
+| | | 1
+| | PRINT
+| | | "OK"
+| ELSE
+| | PRINT
+| | | "another problem"
+IF
+| ==
+| | 1
+| | 0
+| PRINT
+| | "problem"
+ELSE
+| IF
+| | ==
+| | | 1
+| | | 1
+| | PRINT
+| | | "OK"
+| ELSE
+| | PRINT
+| | | "another problem"
+IF
+| ==
+| | 1
+| | 0
+| PRINT
+| | "problem"
+ELSE
+| IF
+| | ==
+| | | 1
+| | | 0
+| | PRINT
+| | | "another problem"
+| ELSE
+| | IF
+| | | ==
+| | | | 1
+| | | | 1
+| | | PRINT
+| | | | "OK"
+| | ELSE
+| | | PRINT
+| | | | "yet another problem"
+
+Interpretation finished

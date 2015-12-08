@@ -1,0 +1,71 @@
+DECL
+| =
+| | x
+| | 0
+FUNDEF
+| primes
+| RET int
+| ARG maxprime
+| DECL
+| | =
+| | | i
+| | | 3
+| | =
+| | | j
+| | | 0
+| IF
+| | >
+| | | maxprime
+| | | 2
+| | PRINT
+| | | 2
+| WHILE
+| | 1
+| | =
+| | | j
+| | | 2
+| | WHILE
+| | | <
+| | | | j
+| | | | i
+| | | IF
+| | | | ==
+| | | | | %
+| | | | | | i
+| | | | | | j
+| | | | | 0
+| | | | BREAK
+| | | =
+| | | | j
+| | | | +
+| | | | | j
+| | | | | 1
+| | IF
+| | | ==
+| | | | i
+| | | | j
+| | | PRINT
+| | | | i
+| | =
+| | | i
+| | | +
+| | | | i
+| | | | 1
+| | IF
+| | | <
+| | | | i
+| | | | maxprime
+| | | CONTINUE
+| | ELSE
+| | | BREAK
+| | PRINT
+| | | "Error!"
+| RETURN
+| | 0
+PRINT
+| "Primes up to 100..."
+FUNCALL
+| primes
+| 100
+
+Interpretation finished

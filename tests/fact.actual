@@ -1,0 +1,90 @@
+DECL
+| =
+| | a
+| | 0
+| =
+| | b
+| | 0
+| =
+| | c
+| | 0
+FUNDEF
+| fact
+| RET int
+| ARG n
+| IF
+| | ==
+| | | n
+| | | 0
+| | RETURN
+| | | 1
+| ELSE
+| | IF
+| | | ==
+| | | | n
+| | | | 1
+| | | RETURN
+| | | | 1
+| | ELSE
+| | | RETURN
+| | | | *
+| | | | | n
+| | | | | FUNCALL
+| | | | | | fact
+| | | | | | -
+| | | | | | | n
+| | | | | | | 1
+FUNDEF
+| fact2
+| RET int
+| ARG x
+| DECL
+| | =
+| | | c
+| | | 1
+| | =
+| | | res
+| | | 1
+| REPEAT
+| | =
+| | | res
+| | | *
+| | | | res
+| | | | c
+| | =
+| | | c
+| | | +
+| | | | c
+| | | | 1
+| UNTIL| | >
+| | | c
+| | | x
+| RETURN
+| | res
+PRINT
+| FUNCALL
+| | fact
+| | 0
+PRINT
+| FUNCALL
+| | fact
+| | 1
+PRINT
+| FUNCALL
+| | fact
+| | 10
+PRINT
+| FUNCALL
+| | fact2
+| | 10
+PRINT
+| FUNCALL
+| | fact
+| | 20
+PRINT
+| FUNCALL
+| | fact2
+| | 20
+
+Variable c in line 14 has been declared earlier
+Interpretation finished

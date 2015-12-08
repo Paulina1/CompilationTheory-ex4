@@ -157,7 +157,8 @@ class Interpreter(object):
         if rc.accept(self):
             return ri.accept(self)
         else:
-            return re.accept(self)
+            if re is not None:
+                return re.accept(self)
 
     @when(AST.WhileInstr)
     def visit(self, node):
@@ -208,7 +209,7 @@ class Interpreter(object):
         except ReturnValueException as e:
             return e.expr.accept(self)
         finally:
-            self.memoryStack.pself.op()
+            self.memoryStack.pop()
 
     @when(AST.ExprInBrackets)
     def visit(self, node):
@@ -244,7 +245,8 @@ class Interpreter(object):
     def visit(self, node):
         self.memoryStack.push(Memory('block'))
         node.declarations.accept(self)
-        node.fundefs_opt.accept(self)
+        if node.fundefs_opt is not None:
+            node.fundefs_opt.accept(self)
         node.instructions_opt.accept(self)
         self.memoryStack.pop()
 

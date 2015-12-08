@@ -1,0 +1,108 @@
+DECL
+| =
+| | a
+| | 0
+| =
+| | b
+| | 0
+| =
+| | c
+| | 0
+FUNDEF
+| gcd
+| RET int
+| ARG m
+| ARG n
+| DECL
+| | =
+| | | res
+| | | 0
+| IF
+| | !=
+| | | m
+| | | n
+| | IF
+| | | >
+| | | | m
+| | | | n
+| | | =
+| | | | res
+| | | | FUNCALL
+| | | | | gcd
+| | | | | -
+| | | | | | m
+| | | | | | n
+| | | | | n
+| | ELSE
+| | | =
+| | | | res
+| | | | FUNCALL
+| | | | | gcd
+| | | | | -
+| | | | | | n
+| | | | | | m
+| | | | | m
+| ELSE
+| | =
+| | | res
+| | | m
+| RETURN
+| | res
+FUNDEF
+| gcd2
+| RET int
+| ARG a
+| ARG b
+| DECL
+| | =
+| | | c
+| | | 0
+| WHILE
+| | !=
+| | | a
+| | | 0
+| | =
+| | | c
+| | | a
+| | =
+| | | a
+| | | %
+| | | | b
+| | | | a
+| | =
+| | | b
+| | | c
+| RETURN
+| | b
+FUNDEF
+| lcm
+| RET int
+| ARG a
+| ARG b
+| RETURN
+| | /
+| | | *
+| | | | a
+| | | | b
+| | | FUNCALL
+| | | | gcd
+| | | | a
+| | | | b
+PRINT
+| FUNCALL
+| | gcd
+| | 125
+| | 100
+PRINT
+| FUNCALL
+| | gcd2
+| | 125
+| | 100
+PRINT
+| FUNCALL
+| | lcm
+| | 125
+| | 100
+
+Variable c in line 23 has been declared earlier
+Interpretation finished
