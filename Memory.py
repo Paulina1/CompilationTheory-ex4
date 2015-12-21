@@ -24,13 +24,21 @@ class MemoryStack:
     def get(self, name):             # gets from memory stack current value of variable <name>
         indices = range(len(self.memList))
         indices.reverse()
+        print 'Indices:', indices
         for i in indices:
-            if self.memList[i].has_key(name):
-                return self.memList[i].get(name)
+            print 'Looking at indice:', i
+            for item in self.memList[i].memory:
+                print 'Contains', item, 'of type:', type(item).__name__
+                if (item == name):
+                    print 'Memory has key:', name
+                    return self.memList[i].get(name)
+            else:
+                print 'Memory doesnt have key', name, 'of type:', type(item).__name__
         return None
 
     def insert(self, name, value): # inserts into memory stack variable <name> with value <value>
         self.memList[-1].put(name, value)
+        print "Memory top: ", self.memList[-1].get(name)
 
     def set(self, name, value): # sets variable <name> to value <value>
         indices = range(len(self.memList))

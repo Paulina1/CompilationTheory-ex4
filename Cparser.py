@@ -41,7 +41,7 @@ class Cparser(object):
     def p_program(self, p):
         """program : blocks"""
         p[0] = p[1]
-        print p[0]
+        #print p[0]
 
     #do nowej gramatyki:
     def p_blocks(self, p):
