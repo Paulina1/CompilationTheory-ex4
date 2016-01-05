@@ -32,8 +32,8 @@ class MemoryStack:
                 if (item == name):
                     print 'Memory has key:', name
                     return self.memList[i].get(name)
-            else:
-                print 'Memory doesnt have key', name, 'of type:', type(item).__name__
+                else:
+                    print 'Memory doesnt have key', name, 'of type:', type(item).__name__
         return None
 
     def insert(self, name, value): # inserts into memory stack variable <name> with value <value>
