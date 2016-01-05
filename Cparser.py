@@ -41,7 +41,7 @@ class Cparser(object):
     def p_program(self, p):
         """program : blocks"""
         p[0] = p[1]
-        #print p[0]
+        print p[0]
 
     #do nowej gramatyki:
     def p_blocks(self, p):
@@ -254,7 +254,7 @@ class Cparser(object):
             args = p[3]
             p[0] = AST.CastFunction(functionName, args, p.lineno(1))
         elif p[1] == "(": #2 typ
-            p[0] = AST.ExprInBrackets(p[2])
+            p[0] = AST.ExprInBrackets(p[2], p.lineno(1))
         else: #1 typ
             p[0] = AST.BinExpr(p[2], p[1], p[3], p.lineno(1))
 

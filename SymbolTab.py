@@ -35,6 +35,12 @@ class SymbolTable(object):
             else:
                 return None
 
+    def get_not_parent(self, name):
+        if name in self.store:
+            return self.store[name]
+        else:
+            return None
+
     def getParentScope(self):
         return self.parent
 

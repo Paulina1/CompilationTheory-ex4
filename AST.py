@@ -117,8 +117,9 @@ class CastFunction(Node):
         self.line = line
 
 class ExprInBrackets(Node):
-    def __init__(self, expr):
+    def __init__(self, expr, line):
         self.expr = expr
+        self.line = line
 
 class ExprList(Node):
     def __init__(self):

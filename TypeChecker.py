@@ -159,7 +159,7 @@ class TypeChecker(NodeVisitor):
         visited_inits = self.visit(node.inits)
         if visited_inits is not None:
             for curr in self.visit(node.inits):
-                if self.scope.get(curr[0]) is not None:
+                if self.scope.get_not_parent(curr[0]) is not None:
                     print "Variable {} in line {} has been declared earlier".format(curr[0], node.line)
                 else:
                     if node.type == curr[1] or (node.type == 'float' and curr[1] == 'int'):
@@ -171,12 +171,14 @@ class TypeChecker(NodeVisitor):
                         print "Type mismatch in line {}".format(node.line)
 
     def visit_ReturnInstr(self, node):
+        self.scope.put('return', 'return')
         if not isinstance(self.scope.get(self.scope.name), FunctionSymbol):
             print "Return outside function in line {}".format(node.line)
         if self.scope.parent.get(self.scope.name) is not None:
-            if self.scope.parent.get(self.scope.name).type == 'int' and self.visit(node.expr) == 'float':
+            expr = self.visit(node.expr)
+            if self.scope.parent.get(self.scope.name).type == 'int' and expr == 'float':
                 print "Warning! You lost float precision in line {}".format(node.line)
-            elif not (self.scope.parent.get(self.scope.name).type == self.visit(node.expr) or (self.scope.parent.get(self.scope.name).type == 'float' and self.visit(node.expr)=='int')):
+            elif not (self.scope.parent.get(self.scope.name).type == expr or (self.scope.parent.get(self.scope.name).type == 'float' and expr=='int')):
                 print "Type mismatch in line {}".format(node.line)
 
     def visit_PrintInstr(self, node):
@@ -187,6 +189,8 @@ class TypeChecker(NodeVisitor):
 
     def visit_AssignmentInstr(self, node):
         type = self.visit(node.expr)
+        if type is None:
+            return None
         var_from_scope = self.scope.get(node.id)
         if var_from_scope is None:
             print "Variable {} in line {} hasn't been declared".format(node.id, node.line)
@@ -198,7 +202,7 @@ class TypeChecker(NodeVisitor):
                 print "Type mismatch in line {}".format(node.line)
 
 
-        return (node.id, self.visit(node.expr))
+        return (node.id, type)
 
     def visit_ChoiceInstr(self, node):
         self.visit(node.condition)
@@ -260,6 +264,8 @@ class TypeChecker(NodeVisitor):
             self.scope = self.scope.pushScope(node.id)
             self.visit(node.args_list_or_empty)
             self.visit(node.compound_instr)
+            if node.type != "void" and self.scope.get_not_parent('return') is None:
+                print "No return for function in line {}".format(node.line)
             self.scope = self.scope.popScope()
 
     def visit_Argument(self, node):
