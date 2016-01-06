@@ -109,7 +109,7 @@ class Interpreter(object):
         else:
             from_stack = self.memoryStack.get(node.val)
             #print from_stack
-            return from_stack if from_stack is not None else None #TODO cos tu zle `self.memoryStack.get(node.val)` daje None
+            return from_stack if from_stack is not None else None
 
     @when(AST.Declarations)
     def visit(self, node):
@@ -141,7 +141,7 @@ class Interpreter(object):
     @when(AST.Init)
     def visit(self, node):
         expr = node.expr.accept(self)
-        print 'Creating',type(node.id).__name__, 'with value', expr
+        # print 'Creating', node.id, 'with value', expr
         self.memoryStack.insert(node.id, expr)
         return expr
 
@@ -184,6 +184,7 @@ class Interpreter(object):
                 break
             except ContinueException:
                 continue
+        print r
         return r
 
     @when(AST.ContinueInstr)
@@ -200,18 +201,22 @@ class Interpreter(object):
             node.declarations.accept(self)
         return node.instructions_opt.accept(self)
 
-    @when(AST.CastFunction)
+    @when(AST.CastFunction) #TODO returns none
     def visit(self, node):
         fun = self.memoryStack.get(node.functionName)
         funM = Memory(node.functionName)
+        exc = None
 
         self.memoryStack.push(funM)
+
         try:
             node.args.accept(self)
+            fun.compound_instr.accept(self)
         except ReturnValueException as e:
-            return e.expr.accept(self)
+             exc = e.value.accept(self)
         finally:
             self.memoryStack.pop()
+            return exc
 
     @when(AST.ExprInBrackets)
     def visit(self, node):
@@ -219,13 +224,17 @@ class Interpreter(object):
 
     @when(AST.ExprList)
     def visit(self, node):
+        return_val = ''
         for expr in node.expressions:
-            expr.accept(self)
+            return_val += str(expr.accept(self))
+        return return_val
 
     @when(AST.FunctionList)
     def visit(self, node):
+        return_val = ''
         for expr in node.functions:
-            expr.accept(self)
+            return_val += str(expr.accept(self))
+        return return_val
 
     @when(AST.Function)
     def visit(self, node):
