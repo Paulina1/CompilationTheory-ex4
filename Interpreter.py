@@ -211,6 +211,10 @@ class Interpreter(object):
 
         try:
             node.args.accept(self)
+            arguments =  fun.args_list_or_empty.accept(self)
+            for argument in arguments:
+                self.memoryStack.insert(argument, node)
+                
             fun.compound_instr.accept(self)
         except ReturnValueException as e:
              exc = e.value.accept(self)
@@ -245,12 +249,15 @@ class Interpreter(object):
 
     @when(AST.Arguments)
     def visit(self, node):
+        tab = []
         for expr in node.arguments:
-            expr.accept(self)
+            tab.append(expr.accept(self))
+        return tab
 
     @when(AST.Argument)
     def visit(self, node):
         self.memoryStack.insert(node.id, node)
+        return node.id
 
     @when(AST.Block)
     def visit(self, node):
