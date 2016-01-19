@@ -211,12 +211,13 @@ class Interpreter(object):
 
     @when(AST.CompoundInstr)
     def visit(self, node):
-        self.memoryStack.push(Memory('comp'))
+
         if node.declarations is not None:
+            self.memoryStack.push(Memory('comp'))
             node.declarations.accept(self)
         ret = node.instructions_opt.accept(self)
-        self.memoryStack.pop()
-        return ret
+        if node.declarations is not None:
+            self.memoryStack.pop()
 
     @when(AST.CastFunction)
     def visit(self, node):
