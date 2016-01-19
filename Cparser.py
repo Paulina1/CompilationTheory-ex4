@@ -184,8 +184,8 @@ class Cparser(object):
 
     def p_repeat_instr(self, p):
         """repeat_instr : REPEAT instructions UNTIL condition ';' """
-        condition = p[2]
-        instruction = p[4]
+        condition = p[4]
+        instruction = p[2]
         p[0] = AST.RepeatInstr(condition, instruction)
 
     def p_return_instr(self, p):
