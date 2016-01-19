@@ -182,7 +182,14 @@ class Interpreter(object):
 
     @when(AST.RepeatInstr)
     def visit(self, node):
-        r = node.instruction.accept(self)
+        try:
+            r = node.instruction.accept(self)
+        except BreakException:
+            return None
+        except ContinueException:
+            #ok
+            pass
+
         while not node.condition.accept(self):
             try:
                 r = node.instruction.accept(self)
