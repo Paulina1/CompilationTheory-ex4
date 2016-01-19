@@ -8,6 +8,8 @@ import re
 
 sys.setrecursionlimit(10000)
 
+called = 0
+
 class Interpreter(object):
 
     def __init__(self):
@@ -209,9 +211,12 @@ class Interpreter(object):
 
     @when(AST.CompoundInstr)
     def visit(self, node):
+        self.memoryStack.push(Memory('comp'))
         if node.declarations is not None:
             node.declarations.accept(self)
-        return node.instructions_opt.accept(self)
+        ret = node.instructions_opt.accept(self)
+        self.memoryStack.pop()
+        return ret
 
     @when(AST.CastFunction)
     def visit(self, node):
@@ -288,3 +293,4 @@ class Interpreter(object):
     def visit(self, node):
         for expr in node.blocks:
             expr.accept(self)
+

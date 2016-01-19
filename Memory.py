@@ -45,9 +45,12 @@ class MemoryStack:
     def set(self, name, value): # sets variable <name> to value <value>
         indices = range(len(self.memList))
         indices.reverse()
+        # print 'indices to put:', indices
         for i in indices:
             if self.memList[i].has_key(name):
+                # print 'put', name, value, 'in', i
                 self.memList[i].put(name, value)
+                break
 
     def push(self, memory): # pushes memory <memory> onto the stack
         self.memList.append(memory)

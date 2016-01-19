@@ -41,7 +41,7 @@ class Cparser(object):
     def p_program(self, p):
         """program : blocks"""
         p[0] = p[1]
-        print p[0]
+        # print p[0]
 
     #do nowej gramatyki:
     def p_blocks(self, p):
@@ -123,7 +123,7 @@ class Cparser(object):
             p[0].push(p[1])
         else:
             if p[1] is None:
-                p[0] = Instructions()
+                p[0] = AST.Instructions()
             else:
                 p[0] = p[1]
             p[0].push(p[2])
