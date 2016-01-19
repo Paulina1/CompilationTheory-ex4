@@ -96,7 +96,8 @@ class Interpreter(object):
     def visit(self, node):
         r1 = node.left.accept(self)
         r2 = node.right.accept(self)
-        return None if (r1 is None) or (r2 is None) else self.op[node.op](r1, r2)
+        to_return = None if (r1 is None) or (r2 is None) else self.op[node.op](r1, r2)
+        return to_return
 
     @when(AST.Const)
     def visit(self, node):
@@ -131,12 +132,16 @@ class Interpreter(object):
 
     @when(AST.PrintInstr)
     def visit(self, node):
-        print node.expr.accept(self)
+        data = node.expr.accept(self)
+        print data[0]
+        return data
 
     @when(AST.Inits)
     def visit(self, node):
+        tab = []
         for expr in node.inits:
-            expr.accept(self)
+            tab.append(expr.accept(self))
+        return tab
 
     @when(AST.Init)
     def visit(self, node):
@@ -156,7 +161,8 @@ class Interpreter(object):
         rc = node.condition
         ri = node.instruction
         re = node.else_instr
-        if rc.accept(self):
+
+        if rc.accept(self) == 1:
             return ri.accept(self)
         else:
             if re is not None:
@@ -184,7 +190,6 @@ class Interpreter(object):
                 break
             except ContinueException:
                 continue
-        print r
         return r
 
     @when(AST.ContinueInstr)
@@ -201,23 +206,27 @@ class Interpreter(object):
             node.declarations.accept(self)
         return node.instructions_opt.accept(self)
 
-    @when(AST.CastFunction) #TODO returns none
+    @when(AST.CastFunction)
     def visit(self, node):
         fun = self.memoryStack.get(node.functionName)
         funM = Memory(node.functionName)
         exc = None
 
-        self.memoryStack.push(funM)
 
         try:
+            arguments_f = node.args.accept(self)
+            self.memoryStack.push(funM)
             node.args.accept(self)
-            arguments =  fun.args_list_or_empty.accept(self)
+            arguments = fun.args_list_or_empty.accept(self)
+
+            i = 0
             for argument in arguments:
-                self.memoryStack.insert(argument, node)
-                
+                self.memoryStack.insert(argument, arguments_f[i])
+            i += 1
+
             fun.compound_instr.accept(self)
         except ReturnValueException as e:
-             exc = e.value.accept(self)
+            exc = e.value.accept(self)
         finally:
             self.memoryStack.pop()
             return exc
@@ -228,9 +237,9 @@ class Interpreter(object):
 
     @when(AST.ExprList)
     def visit(self, node):
-        return_val = ''
+        return_val = []
         for expr in node.expressions:
-            return_val += str(expr.accept(self))
+            return_val.append(expr.accept(self))
         return return_val
 
     @when(AST.FunctionList)
